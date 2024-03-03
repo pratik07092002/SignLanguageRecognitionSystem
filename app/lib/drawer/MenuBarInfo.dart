@@ -15,10 +15,10 @@ class _MenuBarInfoState extends State<MenuBarInfo> {
               child: Column(
                 children: [
                    ListTile(
-              title: Text("About"),
+              title: Text("About" , style: TextStyle(color: Colors.white , fontSize: 21),),
         
             ),
-            ListTile(title: Text("Signs Info") )
+            ListTile(title: Text("Signs Info" , style: TextStyle(color: Colors.white , fontSize: 21),) )
                 ],
               ),
             );

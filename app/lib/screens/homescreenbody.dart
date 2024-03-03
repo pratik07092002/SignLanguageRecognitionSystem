@@ -22,8 +22,8 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
           child: Column(
             
             children: [
-              SizedBox(height: 40,),
-             Text("Bridging the Gap" , style: TextStyle(fontSize: 34, color: Colors.white),),
+              SizedBox(height: 60,),
+             Text("Bridging the Gap" , style: TextStyle(fontSize: 34, color: Colors.blueGrey.shade300),),
              // Button for Opening the Video Loop
              SizedBox(height: 20,)
                   

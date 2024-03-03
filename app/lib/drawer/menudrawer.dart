@@ -15,7 +15,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
         
           child: Container(
             padding: EdgeInsets.all(3),
-            decoration :BoxDecoration(color: Colors.blueGrey),
+            decoration :BoxDecoration(image: DecorationImage(image: AssetImage('assets/menubar.jpg'), fit: BoxFit.cover)),
             child: ListView(
               
               children: [
@@ -23,7 +23,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
                   
                 ),
             
-                child: Text('DrawerHeader'),
+                child: Text('DrawerHeader', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold , color: Colors.white),),
                 ),
                 
                MenuBarInfo()
