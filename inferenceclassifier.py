@@ -2,14 +2,14 @@ import pickle
 import cv2
 import mediapipe as mp
 import numpy as np
-import tkinter as tk
-from tkinter import Label
-from PIL import Image, ImageTk
+from flask import Flask, jsonify, request, render_template
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
 
 model_dict = pickle.load(open('./model_with_labels.p', 'rb'))
 model = model_dict['model']
-
-cap = cv2.VideoCapture(0)
 
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
@@ -21,53 +21,29 @@ labels_dict = {0: 'A', 1: 'B', 2: 'C', 3 :'D', 4:'E', 5:'F', 6:'G', 7:'H', 8:'I'
                10:'k', 11:'L', 12:'M', 13:'N', 14:'O', 15:'P', 16:'Q', 17:'R', 18:'S',
                19:'T', 20:'U', 21:'V', 22:'W', 23:'X', 24:'Y', 25:'Z'}
 
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-root = tk.Tk()
-root.title("Hand Gesture Recognition")
-
-
-predicted_letter_label = Label(root, text="Predicted Letter: ", font=("Helvetica", 16))
-predicted_letter_label.pack(side="top")
-
-
-
-
-
-confidence_label = Label(root, text="Confidence: ", font=("Helvetica", 16))
-confidence_label.pack(side="top")
-
-
-label = tk.Label(root)
-label.pack()
-
-
-def update_display(frame, predicted_letter, predicted_word, confidence):
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    image = Image.fromarray(frame)
-    img = ImageTk.PhotoImage(image)
-    label.config(image=img)
-    label.image = img
-
-    predicted_letter_label.config(text=f"Predicted Letter: {predicted_letter}")
-
-    confidence_label.config(text=f"Confidence: {confidence}%")
-
-while True:
+@app.route('/predict_gesture', methods=['POST'])
+def predict_gesture():
     data_aux = []
     x_ = []
     y_ = []
 
-    ret, frame = cap.read()
+    # Assuming the client sends an image file
+    image_file = request.files.get('image')
+    image = cv2.imdecode(np.frombuffer(image_file.read(), np.uint8), cv2.IMREAD_COLOR)
 
-    H, W, _ = frame.shape
+    H, W, _ = image.shape
 
-    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-    results = hands.process(frame_rgb)
+    results = hands.process(image_rgb)
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
             mp_drawing.draw_landmarks(
-                frame,  
+                image,  
                 hand_landmarks,  
                 mp_hands.HAND_CONNECTIONS,  
                 mp_drawing_styles.get_default_hand_landmarks_style(),
@@ -97,17 +73,20 @@ while True:
         predicted_letter = labels_dict[int(prediction[0])]
         confidence = round(max(model.predict_proba([np.asarray(data_aux)])[0]) * 100, 2)
 
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 6)
-        cv2.putText(frame, predicted_letter, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 0, 0), 3,
+        cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 0), 6)
+        cv2.putText(image, predicted_letter, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 0, 0), 3,
                     cv2.LINE_AA)
 
-       
-        update_display(frame, predicted_letter, predicted_letter, confidence)
+    _, img_encoded = cv2.imencode('.png', image)
+    img_bytes = img_encoded.tobytes()
 
-   
-    root.update_idletasks()
-    root.update()
+    response_data = {
+        'predicted_letter': predicted_letter,
+        'confidence': confidence,
+        'image': img_bytes
+    }
 
+    return jsonify(response_data)
 
-cap.release()
-cv2.destroyAllWindows()
+if __name__ == '__main__':
+    app.run(debug=True)
