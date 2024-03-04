@@ -1,3 +1,5 @@
+import 'package:app/screens/About.dart';
+import 'package:app/screens/info.dart';
 import 'package:flutter/material.dart';
 
 class MenuBarInfo extends StatefulWidget {
@@ -15,10 +17,19 @@ class _MenuBarInfoState extends State<MenuBarInfo> {
               child: Column(
                 children: [
                    ListTile(
-              title: Text("About" , style: TextStyle(color: Colors.white , fontSize: 21),),
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AboutPage()));
+                    },
+              title: Text("About" , style: TextStyle(color: Colors.white , fontSize: 21),
+              
+              ),
         
             ),
-            ListTile(title: Text("Signs Info" , style: TextStyle(color: Colors.white , fontSize: 21),) )
+            ListTile(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>InformationPage()));
+              },
+              title: Text("Signs Info" , style: TextStyle(color: Colors.white , fontSize: 21),) )
                 ],
               ),
             );

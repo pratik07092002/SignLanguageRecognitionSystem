@@ -1,3 +1,4 @@
+import 'package:app/ConnectButton/ConnectionButton.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreenBody extends StatefulWidget {
@@ -24,8 +25,9 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
             children: [
               SizedBox(height: 60,),
              Text("Bridging the Gap" , style: TextStyle(fontSize: 34, color: Colors.blueGrey.shade300),),
-             // Button for Opening the Video Loop
-             SizedBox(height: 20,)
+             
+             SizedBox(height: 220,),
+             ConnectionButton()
                   
                 
             
