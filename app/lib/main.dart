@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(const MyApp());
 }
+late Size screensize;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

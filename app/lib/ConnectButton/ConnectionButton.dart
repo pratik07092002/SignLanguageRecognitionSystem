@@ -1,3 +1,4 @@
+import 'package:app/screens/CameraDisplay.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,37 +11,45 @@ class ConnectionButton extends StatefulWidget {
 }
 
 class _ConnectionButtonState extends State<ConnectionButton> {
-  late List<CameraDescription> Cameras;
   late CameraController cameraController;
+
   @override
   void initState() {
-    videoCamera();
-    // TODO: implement initState
     super.initState();
+    videoCamera();
   }
-  void videoCamera() async{
-    Cameras = await availableCameras();
-cameraController = CameraController(Cameras[0], ResolutionPreset.high , enableAudio: false);
-await cameraController.initialize().then((value) {
-if(!mounted){
-  return;
-}
-else{
-  setState(() {
-    
-  });
-}
-}).catchError((e){
-Fluttertoast.showToast(msg: e.toString() );
-});
+
+  void videoCamera() async {
+    try {
+      List<CameraDescription> cameras = await availableCameras();
+      
+      // Find the front camera or use the first camera if not found
+      CameraDescription frontCamera = cameras.firstWhere(
+        (camera) => camera.lensDirection == CameraLensDirection.front,
+        orElse: () => cameras.first,
+      );
+
+      cameraController = CameraController(
+        frontCamera,
+        ResolutionPreset.high,
+        enableAudio: false,
+      );
+
+      await cameraController.initialize();
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     cameraController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -49,22 +58,24 @@ Fluttertoast.showToast(msg: e.toString() );
           button: true,
           child: InkWell(
             onTap: () {
-if(cameraController.value.isInitialized){
- // Navigate to a different page
-}
-else{
-  Fluttertoast.showToast(msg: "Unable to Start Camera");
-}
-
+              if (cameraController.value.isInitialized) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CameraOpen(cam: cameraController),
+                  ),
+                );
+              } else {
+                Fluttertoast.showToast(msg: "Unable to Start Camera");
+              }
             },
-            
             child: Material(
               elevation: 4,
               shape: const CircleBorder(),
               clipBehavior: Clip.antiAlias,
               child: Container(
-                width: 150, 
-                height: 150, 
+                width: 150,
+                height: 150,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.cyan.shade100,
@@ -72,9 +83,14 @@ else{
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.power_settings_new, size: 40, color: Colors.blueGrey.shade500),
+                    Icon(Icons.power_settings_new,
+                        size: 40, color: Colors.blueGrey.shade500),
                     const SizedBox(height: 4),
-                    Text("Start", style: TextStyle(color: Colors.blueGrey.shade500 ,fontSize: 25),)
+                    Text(
+                      "Start",
+                      style:
+                          TextStyle(color: Colors.blueGrey.shade500, fontSize: 25),
+                    )
                   ],
                 ),
               ),
