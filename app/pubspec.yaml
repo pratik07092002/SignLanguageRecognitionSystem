@@ -39,6 +39,7 @@ dependencies:
   camera: ^0.10.5+9
   toast: ^0.3.0
   fluttertoast: ^8.2.4
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:

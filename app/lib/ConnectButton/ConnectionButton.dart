@@ -22,8 +22,7 @@ class _ConnectionButtonState extends State<ConnectionButton> {
   void videoCamera() async {
     try {
       List<CameraDescription> cameras = await availableCameras();
-      
-      // Find the front camera or use the first camera if not found
+    
       CameraDescription frontCamera = cameras.firstWhere(
         (camera) => camera.lensDirection == CameraLensDirection.front,
         orElse: () => cameras.first,
