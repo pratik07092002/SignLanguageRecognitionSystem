@@ -4,9 +4,9 @@ This is a brief description of your Sign Language Recognition System project.
 
 ## Screenshots
 
-Here is a screenshot of the user interface:
+Here is a resized screenshot of the user interface:
 
-![Sign Language Recognition](https://github.com/pratik07092002/SignLanguageRecognitionSystem/raw/main/app/screenshots/slr.jpg)
+<img src="https://github.com/pratik07092002/SignLanguageRecognitionSystem/raw/main/app/screenshots/slr.jpg" alt="Sign Language Recognition" width="400"/>
 
 ## Installation
 
