@@ -1,6 +1,6 @@
 # Sign Language Recognition System
 
-This is a brief description of your Sign Language Recognition System project.
+This is a Sign Language Recognition system app built in Flutter ui and python-flask backend which enables users to interact with hearing empaired users
 
 ## Screenshots
 
