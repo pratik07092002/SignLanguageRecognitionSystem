@@ -12,9 +12,10 @@ def sendImg():
     data_aux = []
     x_ = []
     y_ = []
-    labels_dict = {0: 'A', 1: 'B', 2: 'C', 3 :'D', 4:'E', 5:'F', 6:'G', 7:'H', 8:'I', 9:'J',
-               10:'k', 11:'L', 12:'M', 13:'N', 14:'O', 15:'P', 16:'Q', 17:'R', 18:'S',
-               19:'T', 20:'U', 21:'V', 22:'W', 23:'X', 24:'Y', 25:'Z'}
+    
+    labels_dict = {0: 'K', 1: 'L', 2: 'M', 3 :'N', 4:'O', 5:'A', 6:'P', 7:'Q', 8:'R', 9:'C',
+                   10:' ', 11:'T', 12:'U', 13:'V', 14:'W', 15:'X', 16:'Y', 17:'Z', 18:'D',
+                   19:'B', 20:'J', 21:'S', 22:'Del', 23:'E', 24:'F', 25:'G', 26:'H', 27:'I'}
     model_dict = pickle.load(open('./model_with_labels.p', 'rb'))
     model = model_dict['model']
     imagefile = request.files['image']
@@ -24,7 +25,9 @@ def sendImg():
     hands = mp_hands.Hands(static_image_mode = True , min_detection_confidence = 0.3)
     image_stream = io.BytesIO(imagefile.read())
     img = cv2.imdecode(np.frombuffer(image_stream.read(), np.uint8), cv2.IMREAD_COLOR)
-    img_rgb = cv2.cvtColor(img , cv2.COLOR_BGR2RGB)
+    img_flip = cv2.flip(img , 1)
+    img_flip1 = cv2.flip(img_flip,1)
+    img_rgb = cv2.cvtColor(img_flip1 , cv2.COLOR_BGR2RGB)
     results = hands.process(img_rgb)
     for hand_landmarks in results.multi_hand_landmarks:
         mp_drawing.draw_landmarks(
@@ -54,9 +57,9 @@ def sendImg():
     prediction = model.predict([np.asarray(data_aux)])        
     predicted_char = labels_dict[int(prediction[0])]
     print(predicted_char)
-    cv2.imwrite('output_image_with_landmarks.jpg', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
+    cv2.imwrite('output_image_with_landmarks1.jpg', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
     
     return jsonify({'predicted_char': predicted_char}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True , host= 'HOST_IP')
+    app.run(debug=True)

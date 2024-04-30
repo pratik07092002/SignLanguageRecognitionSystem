@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 Future<String> sendImage(File _selectedImage) async {
-  var request = http.MultipartRequest('POST', Uri.parse('http://HOST_IP:5000/upload'));
+  var request = http.MultipartRequest('POST', Uri.parse('http://10.0.2.2:5000/upload'));
   request.files.add(await http.MultipartFile.fromPath('image', _selectedImage.path));
 
   try {
