@@ -23,10 +23,11 @@ def sendImg():
     mp_drawing = mp.solutions.drawing_utils
     mp_drawing_styles = mp.solutions.drawing_styles
     hands = mp_hands.Hands(static_image_mode = True , min_detection_confidence = 0.3)
+    
     image_stream = io.BytesIO(imagefile.read())
     img = cv2.imdecode(np.frombuffer(image_stream.read(), np.uint8), cv2.IMREAD_COLOR)
     img_flip = cv2.flip(img , 1)
-    img_flip1 = cv2.flip(img_flip,1)
+    img_flip1 = cv2.flip(img_flip , 1)
     img_rgb = cv2.cvtColor(img_flip1 , cv2.COLOR_BGR2RGB)
     results = hands.process(img_rgb)
     for hand_landmarks in results.multi_hand_landmarks:
@@ -36,7 +37,6 @@ def sendImg():
             mp_hands.HAND_CONNECTIONS,
             mp_drawing_styles.get_default_hand_landmarks_style(),
             mp_drawing_styles.get_default_hand_connections_style(),
-            
         )
         
         if results.multi_hand_landmarks:
